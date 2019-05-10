@@ -2,11 +2,14 @@
 
 namespace App\Exceptions;
 
+use App\Support\ApiBaseTrait;
+use App\Support\ApiRespCode;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
 {
+    use ApiBaseTrait;
     /**
      * A list of the exception types that are not reported.
      *
@@ -14,6 +17,7 @@ class Handler extends ExceptionHandler
      */
     protected $dontReport = [
         //
+        ValidatorRenderException::class
     ];
 
     /**
@@ -46,6 +50,12 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if ($request->wantsJson()) {
+            if ($exception instanceof ValidatorRenderException) {
+                return $this->errorRequestValidator($exception->getValidator());
+            }
+            return $this->errorInterval(ApiRespCode::INTERVAL, $exception->getMessage());
+        }
         return parent::render($request, $exception);
     }
 }

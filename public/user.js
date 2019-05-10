@@ -376,7 +376,7 @@ __webpack_require__.r(__webpack_exports__);
 
       console.log(res);
       this.$router.push({
-        name: 'dashboard'
+        name: 'account'
       }); // 延迟 1 秒显示欢迎信息
 
       setTimeout(function () {

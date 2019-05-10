@@ -16,13 +16,20 @@ Route::group(['prefix' => config('app.admin_base')], function () {
         return view('admin');
     })->where(['route' => '.*']);
 });
-//
-//Route::get('/', function () {
-//    return view('index');
-//});
-//Route::get('/example', function () {
-//    return view('example');
-//});
-//Route::get('/login', function () {
-//    return view('Login.login');
-//});
+
+
+Route::group(['prefix' => 'api'], function () {
+    Route::get('users/', 'Account\\UserController@index');
+    Route::post('users/', 'Account\\UserController@add');
+    Route::get('users/{id}', 'Account\\UserController@info');
+    Route::put('users/{id}', 'Account\\UserController@update');
+    Route::delete('users', 'Account\\UserController@delete');
+
+    Route::delete('roles', 'Account\\RoleController@multiDestroy');
+    Route::get('roles/options', 'Account\\RoleController@getOptions');
+    Route::resource('roles', 'Account\\RoleController');
+
+    Route::resource('permissions', 'Account\\PermissionController');
+
+    Route::post('tools/upload/{path?}', 'Tool\\FileController@imageUpload');
+});
